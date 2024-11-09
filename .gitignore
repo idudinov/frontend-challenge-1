@@ -5,6 +5,7 @@ node_modules
 dist
 lib
 *.local
+tsconfig.tsbuildinfo
 
 # env
 .env

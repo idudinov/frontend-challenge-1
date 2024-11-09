@@ -1,5 +1,8 @@
 {
   "name": "@mano/common",
   "version": "0.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
 }

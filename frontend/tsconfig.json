@@ -29,5 +29,8 @@
       "@common/*": ["../common/*"],
     }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "vite.config.ts"],
+  "references": [
+    { "path": "../common/tsconfig.json" }
+  ]
 }

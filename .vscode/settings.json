@@ -2,7 +2,29 @@
   "prettier.requireConfig": true,
   "cSpell.words": [
     "hono",
+    "lucide",
     "mano",
-    "mantine"
-  ]
+    "mantine",
+    "papaparse"
+  ],
+  "editor.tabSize": 2,
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "_tw:\\s*?[\"'`]([^\"'`]*).*?[\"'`][,;\\s]?"
+    ],
+    [
+      "(?<=tv\\(\\{[^]*?)['\"]([^'\"]*)['\"](?=[^]*?\\}\\))"
+    ],
+    [
+      "(?<=\\/\\*\\s*@tw\\s*\\*\\/\\s*['\"]([^'\"]+)['\"])"
+    ],
+  ],
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    ".*Styles*",
+    ".*ClassName",
+    ".*Class",
+  ],
 }
