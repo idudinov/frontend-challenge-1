@@ -1,4 +1,10 @@
 {
+  "version": "0.0.0",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "common"
+  ],
   "dependencies": {
     "prettier": "^3.3.3"
   }

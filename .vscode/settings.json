@@ -1,3 +1,8 @@
 {
-  "prettier.requireConfig": true
+  "prettier.requireConfig": true,
+  "cSpell.words": [
+    "hono",
+    "mano",
+    "mantine"
+  ]
 }
