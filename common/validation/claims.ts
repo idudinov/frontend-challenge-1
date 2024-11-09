@@ -1,6 +1,7 @@
-import { ClaimItem, ClaimMemberGender, ClaimPaymentStatus, ClaimStatus, ClaimType } from "../models/claims";
+import { ClaimItem, ClaimMemberGender, ClaimPaymentStatus, ClaimStatus, ClaimType } from "../models/claims.js";
 import { z } from "zod";
-import { matchesLax } from "./utils/zod-matches";
+import { matchesLax } from "./utils/zod-matches.js";
+import { DataParseError } from "./utils/error.js";
 
 const baseClaimItemSchema = z
 .object({
@@ -37,3 +38,20 @@ const baseClaimItemSchema = z
 export const ClaimItemSchema = matchesLax<ClaimItem>()(baseClaimItemSchema);
 
 export const ClaimItemKeys = Object.keys(ClaimItemSchema.shape);
+
+export function validateClaimItems(items: unknown[]) {
+  const parsed: ClaimItem[] = Array.from({ length: items.length });
+
+  for (let i = 0; i < items.length; ++i) {
+    const raw = items[i];
+    const result = ClaimItemSchema.safeParse(raw);
+
+    if (!result.success) {
+      throw DataParseError.fromZodError(i, result.error);
+    }
+
+    parsed[i] = result.data;
+  }
+
+  return parsed;
+}

@@ -1,6 +1,4 @@
 
-export type ClaimsSchema = ClaimItem[];
-
 export enum ClaimStatus {
   Payable = "Payable",
   Denied = "Denied",

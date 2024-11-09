@@ -23,7 +23,7 @@ export const ProcessLocalFile = observer(function UploadFile({ model }: ModelPro
         accept="text/csv"
         onChange={model.file.setValue.bind(model.file)}
         value={currentFile}
-        error={model.uploadError.value}
+        error={model.localFileError.value}
       >
         Upload File
       </FileInput>
@@ -54,7 +54,7 @@ export const ProcessLocalFile = observer(function UploadFile({ model }: ModelPro
 });
 
 const Hint = observer(function Hint({ model }: ModelProps<FileProcessViewModel>) {
-  if (model.uploadError.value) {
+  if (model.localFileError.value) {
     return <div>Please check file for errors and try again</div>;
   }
 

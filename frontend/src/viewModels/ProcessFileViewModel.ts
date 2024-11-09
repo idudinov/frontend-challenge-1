@@ -1,13 +1,21 @@
 import logger from "@/logger";
 import { ValueModel } from "@zajno/common-mobx/viewModels/ValueModel";
-import type { ClaimsSchema } from "@mano/common/models/claims";
-import { CSVParseError, parseClaimsCSV, validateClaimItems } from "@/services/parsing";
+import { parseClaimsCSV } from "@/services/parsing";
+import { ClaimItem } from "@common/models/claims";
+import { callApi } from "@/services/api";
+import { Api } from "@common/api";
+import { DataParseError } from "@common/validation/utils/error";
+import { validateClaimItems } from "@common/validation/claims";
 
 export class FileProcessViewModel {
+  public readonly data = new ValueModel<ClaimItem[] | null>(null);
+
   public readonly file = new ValueModel<File | null>(null);
-  public readonly data = new ValueModel<ClaimsSchema | null>(null);
-  public readonly uploadError = new ValueModel<string | null>(null);
+  public readonly localFileError = new ValueModel<string | null>(null);
+
   public readonly approveError = new ValueModel<string | null>(null);
+  public readonly apiError = new ValueModel<string | null>(null);
+
   public readonly state = new ValueModel<ProcessResult | null>(null);
 
   public readonly display = new ValueModel<"initial" | "review" | "upload">("initial");
@@ -17,7 +25,7 @@ export class FileProcessViewModel {
     this.data.reset();
     this.display.reset();
     this.state.reset();
-    this.uploadError.reset();
+    this.localFileError.reset();
   };
 
   public parseCurrentFile = async () => {
@@ -31,11 +39,11 @@ export class FileProcessViewModel {
 
     if (result.success !== true) {
       this.data.reset();
-      this.uploadError.setValue(result.error || "Error parsing file");
+      this.localFileError.setValue(result.error || "Error parsing file");
       return;
     }
 
-    this.uploadError.reset();
+    this.localFileError.reset();
 
     const data = result.data;
 
@@ -51,24 +59,34 @@ export class FileProcessViewModel {
     this.display.setValue("review");
   };
 
-  public startUpload = () => {
-    if (!this.data.value) {
-      return;
-    }
-
-    this.display.setValue("upload");
-  };
-
   public approve = () => {
     // re-validate data
     try {
       validateClaimItems(this.data.value);
       this.approveError.reset();
-      this.startUpload();
+      this.display.setValue("upload");
+
       return true;
     } catch (e) {
       this.approveError.setValue(e.message);
       return false;
+    }
+  };
+
+  public upload = async () => {
+    this.apiError.reset();
+
+    const data = this.data.value;
+    if (!data) {
+      this.apiError.setValue("No data to upload");
+      return;
+    }
+
+    try {
+      await callApi(Api.UploadClaims, { items: data });
+    } catch (e) {
+      logger.error("Error while uploading data", e);
+      this.apiError.setValue("Error while uploading data: " + e.message);
     }
   };
 
@@ -82,7 +100,7 @@ export class FileProcessViewModel {
       return { success: true as const, data };
     } catch (e) {
       let message: string;
-      if (e instanceof CSVParseError) {
+      if (e instanceof DataParseError) {
         message = e.message;
       } else {
         message = "Error parsing file";
@@ -93,4 +111,4 @@ export class FileProcessViewModel {
   };
 }
 
-type ProcessResult = { success: true; data: ClaimsSchema } | { success: false; error?: string };
+type ProcessResult = { success: true; data: ClaimItem[] } | { success: false; error?: string };
