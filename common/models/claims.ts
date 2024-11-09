@@ -16,6 +16,11 @@ export enum ClaimType {
   Institutional = "Institutional",
 }
 
+export enum ClaimMemberGender {
+  Male = "Male",
+  Female = "Female",
+}
+
 export type ClaimItem = {
   "Claim ID": string;
   "Subscriber ID": string;
@@ -40,7 +45,7 @@ export type ClaimItem = {
   "Place of Service": string;
   "Claim Type": ClaimType;
   "Procedure Code": string;
-  "Member Gender": string;
+  "Member Gender": ClaimMemberGender;
   "Provider ID": string;
   "Provider Name": string;
 };

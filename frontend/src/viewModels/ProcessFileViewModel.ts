@@ -1,15 +1,16 @@
 import logger from "@/logger";
 import { ValueModel } from "@zajno/common-mobx/viewModels/ValueModel";
 import type { ClaimsSchema } from "@mano/common/models/claims";
-import { CSVParseError, parseClaimsCSV } from "@/services/parsing";
+import { CSVParseError, parseClaimsCSV, validateClaimItems } from "@/services/parsing";
 
-export class ProcessFileViewModel {
+export class FileProcessViewModel {
   public readonly file = new ValueModel<File | null>(null);
   public readonly data = new ValueModel<ClaimsSchema | null>(null);
   public readonly uploadError = new ValueModel<string | null>(null);
+  public readonly approveError = new ValueModel<string | null>(null);
   public readonly state = new ValueModel<ProcessResult | null>(null);
 
-  public readonly display = new ValueModel<"initial" | "review">("initial");
+  public readonly display = new ValueModel<"initial" | "review" | "upload">("initial");
 
   public reset = () => {
     this.file.reset();
@@ -38,7 +39,7 @@ export class ProcessFileViewModel {
 
     const data = result.data;
 
-    logger.log("Parsed data", data);
+    logger.log("Parsed data, rows count =", data.length);
     this.data.setValue(data);
   };
 
@@ -50,10 +51,26 @@ export class ProcessFileViewModel {
     this.display.setValue("review");
   };
 
+  public startUpload = () => {
+    if (!this.data.value) {
+      return;
+    }
+
+    this.display.setValue("upload");
+  };
+
   public approve = () => {
-    alert('not implemented');
-    this.display.setValue("initial");
-  }
+    // re-validate data
+    try {
+      validateClaimItems(this.data.value);
+      this.approveError.reset();
+      this.startUpload();
+      return true;
+    } catch (e) {
+      this.approveError.setValue(e.message);
+      return false;
+    }
+  };
 
   private tryParseFile = async (file: File): Promise<ProcessResult> => {
     if (!file) {

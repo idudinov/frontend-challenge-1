@@ -1,17 +1,13 @@
-import { ClaimItem, ClaimPaymentStatus, ClaimStatus, ClaimType } from "../models/claims";
+import { ClaimItem, ClaimMemberGender, ClaimPaymentStatus, ClaimStatus, ClaimType } from "../models/claims";
 import { z } from "zod";
-import { matches, Equals, matchesLax } from "./utils/zod-matches";
-
-const ClaimStatusEnum = z.nativeEnum(ClaimStatus);
-const ClaimPaymentStatusEnum = z.nativeEnum(ClaimPaymentStatus);
-const ClaimTypeEnum = z.nativeEnum(ClaimType);
+import { matchesLax } from "./utils/zod-matches";
 
 const baseClaimItemSchema = z
 .object({
   "Claim ID": z.string(),
   "Subscriber ID": z.string(),
   "Member Sequence": z.coerce.number(),
-  "Claim Status": ClaimStatusEnum,
+  "Claim Status": z.nativeEnum(ClaimStatus),
   Billed: z.coerce.number(),
   Allowed: z.coerce.number(),
   Paid: z.coerce.number(),
@@ -21,7 +17,7 @@ const baseClaimItemSchema = z
   "Entry Date": z.coerce.date(),
   "Processed Date": z.coerce.date(),
   "Paid Date": z.coerce.date(),
-  "Payment Status": ClaimPaymentStatusEnum,
+  "Payment Status": z.nativeEnum(ClaimPaymentStatus),
   "Group Name": z.string(),
   "Group ID": z.string(),
   "Division Name": z.string(),
@@ -29,9 +25,9 @@ const baseClaimItemSchema = z
   Plan: z.string(),
   "Plan ID": z.string(),
   "Place of Service": z.string(),
-  "Claim Type": ClaimTypeEnum,
+  "Claim Type": z.nativeEnum(ClaimType),
   "Procedure Code": z.string(),
-  "Member Gender": z.string(),
+  "Member Gender": z.nativeEnum(ClaimMemberGender),
   "Provider ID": z.string(),
   "Provider Name": z.string(),
 })

@@ -3,6 +3,7 @@ import BasicLayout from "./layout/BasicLayout";
 import NotFoundPage from "./pages/error/NotFound";
 import MainPage from "./pages/index";
 import { Routes } from "@/constants/routes";
+import ProcessPage from "./pages/process";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
       {
         path: Routes.Home,
         element: <MainPage />,
+      },
+      {
+        path: Routes.Process,
+        element: <ProcessPage />,
       },
     ],
     errorElement: <NotFoundPage />,
