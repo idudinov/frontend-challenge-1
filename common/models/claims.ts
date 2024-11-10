@@ -14,6 +14,10 @@ export enum ClaimType {
   Institutional = "Institutional",
 }
 
+export function ClaimTypeToLower(value: ClaimType): Lowercase<ClaimType> {
+  return value.toLowerCase() as Lowercase<ClaimType>;
+}
+
 export enum ClaimMemberGender {
   Male = "Male",
   Female = "Female",
@@ -44,6 +48,6 @@ export type ClaimItem = {
   "Claim Type": ClaimType;
   "Procedure Code": string;
   "Member Gender": ClaimMemberGender;
-  "Provider ID": string;
+  "Provider ID": number;
   "Provider Name": string;
 };

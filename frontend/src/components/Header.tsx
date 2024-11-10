@@ -17,6 +17,7 @@ export const Header = () => {
       <nav className="flex gap-4 ml-4">
         <NavLink to={Routes.Home}>Home</NavLink>
         <NavLink to={Routes.Process}>Process</NavLink>
+        <NavLink to={Routes.List}>View Files</NavLink>
       </nav>
     </header>
   );

@@ -2,16 +2,26 @@ import { ZodError } from "zod";
 
 export class DataParseError extends Error {
   constructor(
-    readonly row: number,
     message: string,
     readonly inner?: ZodError,
   ) {
     super(message);
   }
 
-  public static fromZodError(index: number, e: ZodError<unknown>) {
+  public static fromZodError(e: ZodError<unknown>) {
     const firstError = e.issues[0]; // TODO show few first errors?
-    const message = `Error while validating field "${firstError.path.join("/")}" at row ${index + 1}: ${firstError.message}`;
-    return new DataParseError(index + 1, message, e);
+
+    const path = firstError.path.slice();
+
+    const row = path.shift();
+    let rowIndex: number | null = typeof row === 'number' ? row : parseInt(row ?? '', 10);
+    if (isNaN(rowIndex)) {
+      rowIndex = null;
+    }
+
+    const rowPart = rowIndex !== null ? ` at row ${rowIndex + 1}` : '';
+
+    const message = `Error while validating field "${path.join("/")}"${rowPart}: ${firstError.message}`;
+    return new DataParseError(message, e);
   }
 }

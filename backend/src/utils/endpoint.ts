@@ -8,8 +8,14 @@ export function serveEndpoint<T extends IEndpointInfo>(app: Hono, endpoint: T, h
     endpoint.pathBuilder.template(),
     async (ctx) => {
       // Extract input from request to pass it to handler
-      // TODO: this is very simple implementation for now, it assumes json only input
-      const input = await ctx.req.json() as IEndpointInfo.ExtractIn<T>;
+      // TODO: this is very simple implementation for now
+      const input = {
+        ...(ctx.req.header('Content-Type') === 'application/json'
+          ? await ctx.req.json()
+          : {}
+        ),
+        ...ctx.req.param(),
+      } as IEndpointInfo.ExtractIn<T>;
       const output = await handler(input, ctx);
       return ctx.json(output as object); // TS gets mad
     },
