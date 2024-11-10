@@ -1,21 +1,5 @@
 # Design Overview
 
-The project is a monorepo with NPM workspaces:
-
-  - `common` - shared code between the frontend and backend
-  - `frontend` - the frontend React app
-  - `backend` - the backend Hono functions
-
-Extra:
-  - `data` - sample data for testing
-
-### The Challenge
-
-The goal was to make all required functionality in prototype form, therefore:
-
- - no efforts spent on UI completeness; no actual styleguide or design system was implemented, as well as responsiveness.
- - although MVVM pattern was used on the frontend, it's not fully implemented since (per the idea) there should be also Controllers layer (aka Models) to make a complete layers separation.
- - backend implementation is not even close production-ready, but serving more like a demo for the frontend.
 
 ### Application flow
 
@@ -43,25 +27,6 @@ This is done ridiculously simple, the idea was just to test the application beha
 Endpoint definitions allow to mark an endpoint as `authenticated`, so the corresponding middleware is automatically added to the handler on the backend. Example: [`UploadClaims`](./common/api/endpoints/claims.ts) endpoint. In this way, it's easy to control public/private endpoints.
 
 On the frontend, simple HOC [`ProtectedRoute`](./frontend/src/layout/ProtectedRoute.tsx) is used to guard routes from unauthorized access: it checks if the user is authenticated and redirects to the `Home` page if not.
-
-## Init & run
-
-```bash
-# From the root (or any of workspaces) run to install all dependencies:
-npm install
-```
-
-```bash
-# Run the frontend app
-cd frontend
-npm run dev
-```
-
-```bash
-# Run the backend
-cd backend
-npm run dev
-```
 
 ## Common
 
