@@ -8,7 +8,6 @@ import { saveFile } from '../services/storage/index.js';
 import { randomUUID } from 'node:crypto';
 
 export async function uploadClaim(data: UploadClaimsRequestDto): Promise<string | null> {
-  // validate data first
   let items: ClaimItem[];
 
   try {
@@ -19,14 +18,15 @@ export async function uploadClaim(data: UploadClaimsRequestDto): Promise<string 
     throw new HTTPException(400, { message: 'Data validation failed: ' + message, cause: e });
   }
 
-  // convert to MRF format
   const mrf = generateMRFFromClaims(items);
-
-  console.log('Generated MRF, rows =', mrf.length);
-
-  // save data as file
   const uniqueId = randomUUID();
-  const file = await saveFile(JSON.stringify(mrf), uniqueId);
+  const file = await saveFile(
+    JSON.stringify(mrf),
+    uniqueId,
+    undefined,
+    undefined,
+    { type: 'MRF', count: mrf.length, initialCount: items.length },
+  );
 
   return file?.id || null;
 }

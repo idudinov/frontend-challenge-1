@@ -5,7 +5,7 @@ import router from "./routes";
 export default function App() {
   return (
     <MantineProvider theme={theme}>
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
     </MantineProvider>
   );
 }

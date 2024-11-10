@@ -1,2 +1,2 @@
-export * as Api from './endpoints.js';
+export * as Api from './endpoints/index.js';
 export * from './dtos.js';

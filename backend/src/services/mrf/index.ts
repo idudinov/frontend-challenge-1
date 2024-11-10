@@ -1,4 +1,4 @@
-import { ClaimType, ClaimTypeToLower, type ClaimItem } from "@mano/common/models/claims.js";
+import { ClaimTypeToLower, type ClaimItem } from "@mano/common/models/claims.js";
 import type { AllowedAmountFile, AllowedAmountItem, OutOfNetworkItem } from '@mano/common/models/mrf.js';
 import { groupBy } from "@zajno/common/math/arrays";
 

@@ -79,14 +79,16 @@ export class FileProcessViewModel {
     const data = this.data.value;
     if (!data) {
       this.apiError.setValue("No data to upload");
-      return;
+      return false;
     }
 
     try {
       await callApi(Api.UploadClaims, { items: data });
+      return true;
     } catch (e) {
       logger.error("Error while uploading data", e);
       this.apiError.setValue("Error while uploading data: " + e.message);
+      return false;
     }
   };
 

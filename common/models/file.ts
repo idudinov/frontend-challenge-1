@@ -4,4 +4,13 @@ export type FileInfo = {
   name?: string;
   ownerId?: string;
   createdAt?: Date;
+  meta?: FileMeta;
 }
+
+type MRFFileMeta = {
+  type: 'MRF';
+  initialCount: number;
+  count: number;
+}
+
+export type FileMeta = MRFFileMeta;
